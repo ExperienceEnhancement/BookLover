@@ -6,7 +6,7 @@
     using EntityModels;
     using Migrations;
 
-    public class BookLoverDbContext : IdentityDbContext<User>
+    public class BookLoverDbContext : IdentityDbContext<User>, IBookLoverDbContext
     {
         public BookLoverDbContext()
             : base("BookLoverDbConnection", throwIfV1Schema: false)
