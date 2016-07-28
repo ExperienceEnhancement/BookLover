@@ -279,12 +279,16 @@
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BindingModels\AddExternalLoginBindingModel.cs" />
+    <Compile Include="Models\BindingModels\AuthorsBindingModels\CreateAuthorBindingModel.cs" />
+    <Compile Include="Models\BindingModels\BooksBindingModels\CreateEditBookBindingModel.cs" />
+    <Compile Include="Models\BindingModels\BooksBindingModels\BooksSearchBindingModel.cs" />
     <Compile Include="Models\BindingModels\ChangePasswordBindingModel.cs" />
     <Compile Include="Models\BindingModels\RegisterBindingModel.cs" />
     <Compile Include="Models\BindingModels\RegisterExternalBindingModel.cs" />
     <Compile Include="Models\BindingModels\RemoveLoginBindingModel.cs" />
     <Compile Include="Models\BindingModels\SetPasswordBindingModel.cs" />
     <Compile Include="Models\DataTransferObjects\AuthorDto.cs" />
+    <Compile Include="Models\DataTransferObjects\BookDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
