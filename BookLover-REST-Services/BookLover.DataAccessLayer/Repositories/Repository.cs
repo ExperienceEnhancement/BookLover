@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BookLover.DataAccessLayer.Repositories
+﻿namespace BookLover.DataAccessLayer.Repositories
 {
+    using System.Linq;
     using System.Data.Entity;
 
     public class Repository<TEntity>: IRepository<TEntity> where TEntity: class
@@ -49,11 +44,6 @@ namespace BookLover.DataAccessLayer.Repositories
         {
             var entity = this.entitySet.Find(id);
             this.Remove(entity);
-        }
-
-        public int SaveChanges()
-        {
-            throw new NotImplementedException();
         }
 
         private void ChangeState(TEntity entity, EntityState state)

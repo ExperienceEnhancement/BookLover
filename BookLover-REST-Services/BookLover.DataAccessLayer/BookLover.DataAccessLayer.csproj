@@ -59,6 +59,8 @@
   <ItemGroup>
     <Compile Include="Contexts\BookLoverDbContext.cs" />
     <Compile Include="Contexts\IBookLoverDbContext.cs" />
+    <Compile Include="Data\BookLoverBookLoverData.cs" />
+    <Compile Include="Data\IBookLoverData.cs" />
     <Compile Include="Migrations\BookLoverDbMigrationConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IRepository.cs" />
@@ -68,9 +70,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\BookLover.EntityModels\BookLover.EntityModels.csproj">
       <Project>{d21f19b8-97af-415e-9d00-4123b12de425}</Project>

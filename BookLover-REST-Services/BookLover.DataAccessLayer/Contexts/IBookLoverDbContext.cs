@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BookLover.DataAccessLayer.Contexts
+﻿namespace BookLover.DataAccessLayer.Contexts
 {
     using System.Data.Entity;
+
     using EntityModels;
 
     public interface IBookLoverDbContext
@@ -24,5 +19,7 @@ namespace BookLover.DataAccessLayer.Contexts
         IDbSet<Author> Authors { get; }
 
         IDbSet<DiaryAccess> DiaryAccesses { get; }
+
+        int SaveChanges();
     }  
 }

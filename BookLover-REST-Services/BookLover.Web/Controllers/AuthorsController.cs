@@ -1,15 +1,20 @@
 ﻿namespace BookLover.Web.Controllers
 {
-    using System.Data.Entity;
-    using System.Linq;
     using System.Web.Http;
+
     using AutoMapper.QueryableExtensions;
+
     using DataAccessLayer.Contexts;
+    using DataAccessLayer.Data;
     using Models.DataTransferObjects;
 
     [RoutePrefix("api/Authors")]
-    public class AuthorsController: ApiController
+    public class AuthorsController: BaseApiController
     {
+        public AuthorsController(IBookLoverData data): base(data)
+        {
+        }
+
         //
         // GET: api/authors
         [Route("")]
@@ -17,7 +22,7 @@
         {
             var context = new BookLoverDbContext();
 
-            var authors = context.Authors
+            var authors = this.Data.Authors.All()
                 .Project()
                 .To<AuthorDto>();
 
