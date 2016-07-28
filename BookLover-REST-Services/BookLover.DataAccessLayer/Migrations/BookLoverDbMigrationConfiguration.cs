@@ -4,7 +4,8 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Data.Entity.Migrations;
-
+    using System.Security.Cryptography.X509Certificates;
+    using Common.EntityModelsUtils;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -26,6 +27,10 @@
                 this.CreateUsers(context);
                 this.CreateAuthors(context);
                 this.CreateBooks(context);
+                this.CreateDiaryAccesses(context);
+                this.CreateBookDiaries(context);
+                this.CreateDiaryNotes(context);
+                this.CreateReviews(context);
             }
         }
 
@@ -154,6 +159,174 @@
                     throw new Exception(string.Join("; ", userCreateResult.Errors));
                 }
             }
+        }
+
+        private void CreateDiaryAccesses(BookLoverDbContext context)
+        {
+            var privateAccess = new DiaryAccess()
+            {
+                Name = "Private"
+            };
+
+            context.DiaryAccesses.Add(privateAccess);
+
+            var publicAccess = new DiaryAccess()
+            {
+                Name = "Public"
+            };
+
+            context.DiaryAccesses.Add(publicAccess);
+
+            context.SaveChanges();
+        }
+
+        private void CreateBookDiaries(BookLoverDbContext context)
+        {
+           var katherinasDiary = new BookDiary()
+           {
+               User = context.Users.Where(x => x.UserName == "katherina").First(),
+               Book = context.Books.Where(x => x.Title == "Pride and Prejudice").First(),
+               DiaryAccess = context.DiaryAccesses.Where(x => x.Name == "Public").First()
+           };
+
+           context.BookDiaries.Add(katherinasDiary);
+
+           var nikolasDiary = new BookDiary()
+           {
+               User = context.Users.Where(x => x.UserName == "nikola").First(),
+               Book = context.Books.Where(x => x.Title == "To Kill a Mockingbird").First(),
+               DiaryAccess = context.DiaryAccesses.Where(x => x.Name == "Private").First()
+           };
+
+           context.BookDiaries.Add(nikolasDiary);
+
+           context.SaveChanges();
+        }
+
+        private void CreateDiaryNotes(BookLoverDbContext context)
+        {
+            var katherinasDiary = context.BookDiaries.Where(x => x.User.UserName == "katherina").First();
+
+            katherinasDiary.DiaryNotes = new HashSet<DiaryNote>();
+
+            katherinasDiary.DiaryNotes.Add(new DiaryNote()
+            {
+                BookDiary = katherinasDiary,
+                Date = DateTime.Now,
+                Text = "Katherins's fisrt note"
+            });
+
+            katherinasDiary.DiaryNotes.Add(new DiaryNote()
+            {
+                BookDiary = katherinasDiary,
+                Date = DateTime.Now,
+                Text = "Katherina's second note"
+            });
+
+            katherinasDiary.DiaryNotes.Add(new DiaryNote()
+            {
+                BookDiary = katherinasDiary,
+                Date = DateTime.Now,
+                Text = "Katherina's third note"
+            });
+
+            katherinasDiary.DiaryNotes.Add(new DiaryNote()
+            {
+                BookDiary = katherinasDiary,
+                Date = DateTime.Now,
+                Text = "Katherina's fourth note"
+            });
+
+            katherinasDiary.DiaryNotes.Add(new DiaryNote()
+            {
+                BookDiary = katherinasDiary,
+                Date = DateTime.Now,
+                Text = "Katherina's fifth note"
+            });
+
+            var nikolasDiary = context.BookDiaries.Where(x => x.User.UserName == "nikola").First();
+
+            nikolasDiary.DiaryNotes = new HashSet<DiaryNote>();
+
+            nikolasDiary.DiaryNotes.Add(new DiaryNote()
+            {
+                BookDiary = nikolasDiary,
+                Date = DateTime.Now,
+                Text = "Nikola's fisrt note"
+            });
+
+            nikolasDiary.DiaryNotes.Add(new DiaryNote()
+            {
+                BookDiary = nikolasDiary,
+                Date = DateTime.Now,
+                Text = "Nikola's second note"
+            });
+
+            nikolasDiary.DiaryNotes.Add(new DiaryNote()
+            {
+                BookDiary = nikolasDiary,
+                Date = DateTime.Now,
+                Text = "Nikola's third note"
+            });
+
+            nikolasDiary.DiaryNotes.Add(new DiaryNote()
+            {
+                BookDiary = nikolasDiary,
+                Date = DateTime.Now,
+                Text = "Nikola's fourth note"
+            });
+
+            nikolasDiary.DiaryNotes.Add(new DiaryNote()
+            {
+                BookDiary = nikolasDiary,
+                Date = DateTime.Now,
+                Text = "Nikola's fifth note"
+            });
+
+            context.SaveChanges();
+        }
+
+        private void CreateReviews(BookLoverDbContext context)
+        {
+            var prideAndPrejudiceFirstReview = new Review()
+            {
+                Book = context.Books.Where(x => x.Title == "Pride and Prejudice").First(),
+                User = context.Users.Where(x => x.UserName == "katherina").First(),
+                Comment = "One of my favorite book",
+                Rate = Constraints.ReviewRateMaxValue
+            };
+
+            context.Reviews.Add(prideAndPrejudiceFirstReview);
+
+            var prideAndPrejudiceSecondReview = new Review()
+            {
+                Book = context.Books.Where(x => x.Title == "Pride and Prejudice").First(),
+                User = context.Users.Where(x => x.UserName == "nikola").First(),
+                Comment = "Really interesting book",
+                Rate = 9
+            };
+
+            context.Reviews.Add(prideAndPrejudiceSecondReview);
+
+            var romeoAndJulietFirstReview = new Review()
+            {
+                Book = context.Books.Where(x => x.Title == "Romeo and Juliet").First(),
+                User = context.Users.Where(x => x.UserName == "katherina").First(),
+                Comment = "Classic book",
+                Rate = 8
+            };
+
+            context.Reviews.Add(romeoAndJulietFirstReview);
+
+            var romeoAndJulietSecondReview = new Review()
+            {
+                Book = context.Books.Where(x => x.Title == "Romeo and Juliet").First(),
+                User = context.Users.Where(x => x.UserName == "georgi").First(),
+                Comment = "The best book ever",
+                Rate = Constraints.ReviewRateMaxValue
+            };
+
+            context.Reviews.Add(romeoAndJulietSecondReview);
         }
     }
 }

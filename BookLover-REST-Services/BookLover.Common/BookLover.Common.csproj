@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EntityModelsUtils\Constraints.cs" />
     <Compile Include="Mappings\AutoMapperConfig.cs" />
     <Compile Include="Mappings\IHaveCustomMappings.cs" />
     <Compile Include="Mappings\IMapFrom.cs" />

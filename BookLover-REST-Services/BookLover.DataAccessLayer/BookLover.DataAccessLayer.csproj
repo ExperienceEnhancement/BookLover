@@ -72,6 +72,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <ProjectReference Include="..\BookLover.Common\BookLover.Common.csproj">
+      <Project>{8428e4dd-6c52-490e-9529-e05217f95838}</Project>
+      <Name>BookLover.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BookLover.EntityModels\BookLover.EntityModels.csproj">
       <Project>{d21f19b8-97af-415e-9d00-4123b12de425}</Project>
       <Name>BookLover.EntityModels</Name>
