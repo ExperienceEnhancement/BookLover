@@ -8,6 +8,7 @@
     using System.Web.Routing;
 
     using Common.Mappings;
+    using Newtonsoft.Json.Serialization;
 
     public class WebApiApplication : System.Web.HttpApplication
     {
@@ -21,6 +22,9 @@
 
             var autoMapperConfig = new AutoMapperConfig(new List<Assembly> { Assembly.GetExecutingAssembly() });
             autoMapperConfig.Execute();
+
+            GlobalConfiguration.Configuration.Formatters
+               .JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
         }
     }
 }

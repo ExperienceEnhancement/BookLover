@@ -10,16 +10,16 @@
         {
         }
 
-        // 
-        // GET: api/BookDiaries/{id:int}
-        [HttpGet]
-        [Route("{id:int}")]
-        public IHttpActionResult GetBookDiaries(int id)
-        {
-            var diaries = this.Data.BookDiaries
-                .All()
-                .Where(x => x.BookId == id)
-               ;
-        }
+        //// 
+        //// GET: api/BookDiaries/{id:int}
+        //[HttpGet]
+        //[Route("{id:int}")]
+        //public IHttpActionResult GetBookDiaries(int id)
+        //{
+        //    var diaries = this.Data.BookDiaries
+        //        .All()
+        //        .Where(x => x.BookId == id)
+        //       ;
+        //}
     }
 }

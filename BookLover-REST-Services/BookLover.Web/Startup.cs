@@ -12,6 +12,8 @@ using Owin;
 
 namespace BookLover.Web
 {
+    using System.Threading.Tasks;
+    using System.Web.Cors;
     using DataAccessLayer.Contexts;
     using DataAccessLayer.Data;
 
@@ -27,7 +29,8 @@ namespace BookLover.Web
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional });
-            app.UseNinjectWebApi(webApiConfig);
+            webApiConfig.EnableCors();
+            app.UseNinjectWebApi(GlobalConfiguration.Configuration);
         }
 
         private IKernel CreateKernel()

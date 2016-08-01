@@ -4,6 +4,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Web.Http;
+    using System.Web.Http.Cors;
 
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
@@ -17,6 +18,7 @@
     using Models.DataTransferObjects;
 
     [RoutePrefix("api/Books")]
+    [EnableCors(origins: "*", headers: "*", methods: "GET")]
     public class BooksController: BaseApiController
     {
         public BooksController(IBookLoverData data): base(data)
@@ -27,6 +29,7 @@
         // GET: api/Books
         [HttpGet]
         [Route("")]
+        [EnableCors(origins: "*", headers: "*", methods: "GET")]
         public IHttpActionResult GetAllBooks([FromUri]BooksSearchBindingModel model)
         {
             var booksQuery = this.Data.Books
