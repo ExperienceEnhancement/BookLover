@@ -6,7 +6,6 @@
 
     using AutoMapper.QueryableExtensions;
 
-    using DataAccessLayer.Contexts;
     using DataAccessLayer.Data;
     using EntityModels;
     using Models.BindingModels.AuthorsBindingModels;
@@ -20,7 +19,7 @@
         }
 
         //
-        // GET: api/authors
+        // GET: api/Authors
         [HttpGet]
         [Route("")]
         public IHttpActionResult GetAuthors()

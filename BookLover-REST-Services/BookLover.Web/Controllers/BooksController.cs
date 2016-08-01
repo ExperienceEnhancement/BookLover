@@ -16,7 +16,7 @@
     using Models.BindingModels.BooksBindingModels;
     using Models.DataTransferObjects;
 
-    [RoutePrefix("api/books")]
+    [RoutePrefix("api/Books")]
     public class BooksController: BaseApiController
     {
         public BooksController(IBookLoverData data): base(data)
@@ -24,7 +24,7 @@
         }
 
         //
-        // GET: api/books
+        // GET: api/Books
         [HttpGet]
         [Route("")]
         public IHttpActionResult GetAllBooks([FromUri]BooksSearchBindingModel model)
@@ -50,7 +50,7 @@
         }
 
         //
-        // GET: api/books/{id:int}
+        // GET: api/Books/{id:int}
         [HttpGet]
         [Route("{id:int}")]
         public IHttpActionResult GetBook(int id)
@@ -68,7 +68,31 @@
         }
 
         //
-        // POST: api/books
+        // GET: api/Books/{id:int}/reviews
+        [HttpGet]
+        [Route("{id:int}/Reviews")]
+        public IHttpActionResult GetReviewsForBook(int id)
+        {
+            var book = this.Data.Books
+               .All()
+               .Include(x => x.Reviews)
+               .FirstOrDefault(x => x.Id == id);
+
+            if (book == null)
+            {
+                return this.NotFound();
+            }
+
+            var reviews = book.Reviews
+                .AsQueryable()
+                .Project()
+                .To<ReviewDto>();
+
+            return this.Ok(reviews);
+        }
+
+        //
+        // POST: api/Books
         [HttpPost]
         [Route("", Name = "CreateBook")]
         public IHttpActionResult CreateBook([FromBody]CreateEditBookBindingModel model)
@@ -105,7 +129,7 @@
 
 
         //
-        // PATCH: api/books/{id:int}
+        // PATCH: api/Books/{id:int}
         [HttpPatch] 
         [Route("{id:int}")]
         public IHttpActionResult EditBook(int id, [FromBody]CreateEditBookBindingModel model)
