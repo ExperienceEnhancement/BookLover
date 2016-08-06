@@ -3,5 +3,5 @@ bin
 obj
 /*.suo
 .vs
-idea
+.idea
 node_modules
