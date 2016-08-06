@@ -1,5 +1,5 @@
 var React = require('react');
-var Book = require('./Book.react.js');
+var Book = require('./Book.react');
 
 var BooksList = React.createClass({
     render: function () {

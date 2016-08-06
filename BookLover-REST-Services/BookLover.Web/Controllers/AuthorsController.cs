@@ -1,4 +1,6 @@
-﻿namespace BookLover.Web.Controllers
+﻿using System.Web.Http.Cors;
+
+namespace BookLover.Web.Controllers
 {
     using System.Data.Entity;
     using System.Linq;
@@ -12,6 +14,7 @@
     using Models.DataTransferObjects;
 
     [RoutePrefix("api/Authors")]
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class AuthorsController: BaseApiController
     {
         public AuthorsController(IBookLoverData data): base(data)

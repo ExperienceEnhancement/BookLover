@@ -1,31 +1,41 @@
 var React = require('react');
-var BooksList = require('./BooksList.react.js');
-var BookForm = require('./BookForm.react.js');
-var BooksStore = require('../stores/BooksStore.js');
+
+// Components
+var BooksList = require('./BooksList.react');
+var BookForm = require('./BookForm.react');
+
+// Stores
+var BooksStore = require('../stores/BooksStore');
+var AuthorsStore = require('../stores/AuthorsStore');
 
 function getBooksListState() {
     return {
-        books: BooksStore.getBooks(),
-        authors: [{id: 1, name: 'Jane Austin'}, {id: 2, name: 'Harper Lee'}]
-    };
+        books: BooksStore.getBooksList(),
+        bookFormErrors: BooksStore.getBookFormErrors(),
+        authors: AuthorsStore.getAuthorsList()
+    }
 }
 
 var BookLoverApp = React.createClass({
     getInitialState: function () {
         return getBooksListState();
     },
-    componentDidMount: function () {
-        BooksStore.addChangeListener(this._onChange);
-    },
     componentWillMount: function () {
         BooksStore.removeChangeListener(this._onChange);
-        BooksStore.pullBooksFromServer();
+        AuthorsStore.removeChangeListener(this._onChange);
+        // Api invocations by the stores
+        BooksStore.getBooksFromServer();
+        AuthorsStore.getAuthorsFromServer();
+    },
+    componentDidMount: function () {
+        BooksStore.addChangeListener(this._onChange);
+        AuthorsStore.addChangeListener(this._onChange);
     },
     render: function () {
         return (
             <div className="book-lover-app">
                 <BooksList books={this.state.books}></BooksList>
-                <BookForm authors={this.state.authors}></BookForm>
+                <BookForm errors={this.state.bookFormErrors} authors={this.state.authors}></BookForm>
             </div>
         );
     },

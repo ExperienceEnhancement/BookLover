@@ -1,9 +1,9 @@
 var React = require('react');
-var BookViewActions = require('../actions/BookViewActions');
+var BooksViewActions = require('../actions/BooksViewActions');
 
 var Book = React.createClass({
     handleEditBtnClick: function () {
-        BookViewActions.bookEditBtnClick();
+        BooksViewActions.bookEditBtnClick();
     },
     render: function () {
         return (

@@ -5,6 +5,7 @@ module.exports = keyMirror({
     // Server
     RECEIVE_BOOKS: null,
     RECEIVE_AUTHORS: null,
+    RECEIVE_BOOK_FORM_ERRORS: null,
     
     // Views
     EDIT_BOOK_BTN_CLICK: null,

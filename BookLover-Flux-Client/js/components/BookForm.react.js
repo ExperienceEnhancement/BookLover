@@ -1,13 +1,25 @@
 var React = require('react');
-var BookViewActions = require('../actions/BookViewActions');
+var _ = require('underscore');
+
+// Stores
+var BooksStore = require('../stores/BooksStore');
+
+// Actions
+var BooksViewActions = require('../actions/BooksViewActions');
+
+let authorIdDefaultValue = -1;
+
+function  getBookInitialState() {
+    return { book: {
+        title: '',
+        summary: '',
+        authorId: authorIdDefaultValue
+    }}
+}
 
 var BookForm = React.createClass({
     getInitialState: function() {
-        return { book: {
-            title: '',
-            summary: '',
-            authorId: ''
-        }}
+        return getBookInitialState();
     },
     changeBookState: function (e) {
         var book = this.state.book;
@@ -18,19 +30,28 @@ var BookForm = React.createClass({
     saveBook: function (e) {
         e.preventDefault();
         var book = this.state.book;
-        BookViewActions.saveBook(book);
+        BooksViewActions.saveBook(book);
+    },
+    componentDidMount: function () {
+        BooksStore.addChangeListener(this._onChange);
+    },
+    componentWillMount: function () {
+        BooksStore.removeChangeListener(this._onChange);
     },
     render: function () {
         var self = this;
+        var errors = self.props.errors;
         return(
             <div className="col-lg-12">
                 <form className="form-horizontal col-lg-4 col-lg-offset-4">
                     <fieldset>
                         <legend className="text-center">Create book</legend>
-                        <div className="form-group">
+                        <div className={"form-group" + (errors.title ? ' has-error' : '')}>
                             <label className="control-label col-lg-2">Title</label>
                             <div className="col-lg-10">
                                 <input className="form-control" name="title" type="text" value={self.state.book.title} placeholder="Title" onChange={self.changeBookState}/>
+                                {errors.title ? errors.title.map(function (error) {
+                                    return <span className="help-block">{error}</span> }) : ''}
                             </div>
                         </div>
                         <div className="form-group">
@@ -39,17 +60,19 @@ var BookForm = React.createClass({
                                 <textarea className="form-control" name="summary" type="text" placeholder="Summary" value={self.state.book.summary} onChange={self.changeBookState}></textarea>
                             </div>
                         </div>
-                        <div className="form-group">
+                        <div className={"form-group" + (errors.authorId ? ' has-error' : '')}>
                             <label className="control-label col-lg-2">Author</label>
                             <div className="col-lg-10">
                                 <select className="form-control" name="authorId" value={self.state.book.authorId} onChange={self.changeBookState}>
-                                    <option value="">--</option>
+                                    <option value={authorIdDefaultValue}>--</option>
                                     {this.props.authors.map(function (author) {
                                         return (
-                                            <option key={author.id} value={author.id}>{author.name}</option>
+                                            <option key={author.id} value={author.id}>{author.firstName} {author.lastName}</option>
                                         )
                                     })}
                                 </select>
+                                {errors.authorId ? errors.authorId.map(function (error) {
+                                    return <span className="help-block">{error}</span> }) : ''}
                             </div>
                         </div>
                     </fieldset>
@@ -59,6 +82,11 @@ var BookForm = React.createClass({
                 </form>
             </div>
         );
+    },
+    _onChange: function () {
+        if(_.isEmpty(this.props.errors)) {
+            this.setState(getBookInitialState());
+        }
     }
 });
 
