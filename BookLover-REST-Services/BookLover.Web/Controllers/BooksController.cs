@@ -18,7 +18,7 @@
     using Models.DataTransferObjects;
 
     [RoutePrefix("api/Books")]
-    [EnableCors(origins: "*", headers: "*", methods: "GET")]
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class BooksController: BaseApiController
     {
         public BooksController(IBookLoverData data): base(data)
@@ -29,7 +29,6 @@
         // GET: api/Books
         [HttpGet]
         [Route("")]
-        [EnableCors(origins: "*", headers: "*", methods: "GET")]
         public IHttpActionResult GetAllBooks([FromUri]BooksSearchBindingModel model)
         {
             var booksQuery = this.Data.Books

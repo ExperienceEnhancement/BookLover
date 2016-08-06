@@ -2,6 +2,7 @@
 using System.Web.Http;
 
 using Microsoft.Owin;
+using Newtonsoft.Json.Serialization;
 using Ninject;
 using Ninject.Web.Common.OwinHost;
 using Ninject.Web.WebApi.OwinHost;
@@ -30,7 +31,9 @@ namespace BookLover.Web
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional });
             webApiConfig.EnableCors();
-            app.UseNinjectWebApi(GlobalConfiguration.Configuration);
+            webApiConfig.Formatters
+              .JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            app.UseNinjectWebApi(webApiConfig);
         }
 
         private IKernel CreateKernel()

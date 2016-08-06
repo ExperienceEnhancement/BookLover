@@ -4,6 +4,7 @@
   "description": "Pricing component with flux",
   "main": "js/app.js",
   "dependencies": {
+    "bootstrap": "^3.3.7",
     "flux": "^2.0.0",
     "keymirror": "^0.1.1",
     "react": "^15.3.0",

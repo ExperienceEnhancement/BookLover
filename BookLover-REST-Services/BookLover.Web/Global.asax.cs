@@ -22,9 +22,6 @@
 
             var autoMapperConfig = new AutoMapperConfig(new List<Assembly> { Assembly.GetExecutingAssembly() });
             autoMapperConfig.Execute();
-
-            GlobalConfiguration.Configuration.Formatters
-               .JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
         }
     }
 }
