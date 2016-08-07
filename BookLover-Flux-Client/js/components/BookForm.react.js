@@ -9,17 +9,18 @@ var BooksViewActions = require('../actions/BooksViewActions');
 
 let authorIdDefaultValue = -1;
 
-function  getBookInitialState() {
+function  getBookInitialState(book) {
     return { book: {
-        title: '',
-        summary: '',
-        authorId: authorIdDefaultValue
+        id: book.id,
+        title: book.title,
+        summary: book.summary,
+        authorId: book.authorId
     }}
 }
 
 var BookForm = React.createClass({
     getInitialState: function() {
-        return getBookInitialState();
+        return getBookInitialState(this.props.book);
     },
     changeBookState: function (e) {
         var book = this.state.book;
@@ -45,7 +46,8 @@ var BookForm = React.createClass({
             <div className="col-lg-12">
                 <form className="form-horizontal col-lg-4 col-lg-offset-4">
                     <fieldset>
-                        <legend className="text-center">Create book</legend>
+                        <legend className="text-center">{self.props.status == 'create' ? 'Create' : 'Edit'} book</legend>
+                        <input type="hidden" name="id" value={self.state.book.id}/>
                         <div className={"form-group" + (errors.title ? ' has-error' : '')}>
                             <label className="control-label col-lg-2">Title</label>
                             <div className="col-lg-10">
@@ -85,7 +87,7 @@ var BookForm = React.createClass({
     },
     _onChange: function () {
         if(_.isEmpty(this.props.errors)) {
-            this.setState(getBookInitialState());
+            this.setState(getBookInitialState(BooksStore.getFormBook()));
         }
     }
 });

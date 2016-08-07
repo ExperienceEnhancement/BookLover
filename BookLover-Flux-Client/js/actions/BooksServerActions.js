@@ -8,6 +8,12 @@ var BooksListServerActions = {
             data: data
         });
     },
+    receiveBook: function (data) {
+        AppDispatcher.handleServerAction({
+            actionType: ActionTypes.RECEIVE_BOOK,
+            data: data
+        });
+    },
     receiveBookFormErrors: function(data) {
         AppDispatcher.handleServerAction({
             actionType: ActionTypes.RECEIVE_BOOK_FORM_ERRORS,

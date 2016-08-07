@@ -6,8 +6,9 @@ module.exports = keyMirror({
     RECEIVE_BOOKS: null,
     RECEIVE_AUTHORS: null,
     RECEIVE_BOOK_FORM_ERRORS: null,
+    RECEIVE_BOOK: null,
     
     // Views
-    EDIT_BOOK_BTN_CLICK: null,
+    BOOK_DETAILS_BTN_CLICK: null,
     SAVE_BOOK: null
 });

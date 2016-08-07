@@ -12,7 +12,9 @@ function getBooksListState() {
     return {
         books: BooksStore.getBooksList(),
         bookFormErrors: BooksStore.getBookFormErrors(),
-        authors: AuthorsStore.getAuthorsList()
+        book: BooksStore.getFormBook(),
+        authors: AuthorsStore.getAuthorsList(),
+        status: 'create'
     }
 }
 
@@ -35,7 +37,7 @@ var BookLoverApp = React.createClass({
         return (
             <div className="book-lover-app">
                 <BooksList books={this.state.books}></BooksList>
-                <BookForm errors={this.state.bookFormErrors} authors={this.state.authors}></BookForm>
+                <BookForm errors={this.state.bookFormErrors} authors={this.state.authors} book={this.state.book} status={this.state.status}></BookForm>
             </div>
         );
     },

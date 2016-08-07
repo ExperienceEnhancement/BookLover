@@ -8,8 +8,16 @@ var ActionTypes = require('../constants/ActionTypes');
 // Api services
 var BooksApiService = require('../api-services/BooksApiService');
 
+let authorIdDefaultValue = -1;
+
 var _books = [{}];
 var _bookFormErrors = {};
+var _formBook = {
+    id: '',
+    title: '',
+    summary: '',
+    authorId: authorIdDefaultValue
+};
 
 function updateBooksList(books) {
     _books = books;
@@ -23,6 +31,14 @@ function updateBookFormErrors(bookFormErrors) {
     _bookFormErrors = bookFormErrors;
 }
 
+function getBookFromServer(bookId) {
+    BooksApiService.getBook(bookId);
+}
+
+function updateFormBook(book) {
+    _formBook = book;
+}
+
 var BooksStore = _.extend({}, EventEmitter.prototype, {
     getBooksFromServer: function () {
         BooksApiService.get();
@@ -32,6 +48,9 @@ var BooksStore = _.extend({}, EventEmitter.prototype, {
     },
     getBookFormErrors: function() {
         return _bookFormErrors;
+    },
+    getFormBook: function() {
+        return _formBook
     },
     emitChange: function () {
         this.emit('change');
@@ -55,6 +74,12 @@ AppDispatcher.register(function (payload) {
             break;
         case ActionTypes.RECEIVE_BOOK_FORM_ERRORS:
             updateBookFormErrors(action.data);
+            break;
+        case ActionTypes.BOOK_DETAILS_BTN_CLICK:
+            getBookFromServer(action.data);
+            break;
+        case ActionTypes.RECEIVE_BOOK:
+            updateFormBook(action.data);
             break;
         default:
             return true;

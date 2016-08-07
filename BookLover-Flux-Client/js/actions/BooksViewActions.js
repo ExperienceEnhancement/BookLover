@@ -2,9 +2,10 @@ var AppDispatcher = require('../dispatcher/AppDispatcher');
 var ActionTypes = require('../constants/ActionTypes');
 
 var BookViewActions = {
-    bookEditBtnClick: function () {
+    bookDetailsBtnClick: function (bookId) {
         AppDispatcher.handleViewAction({
-            actionType: ActionTypes.EDIT_BOOK_BTN_CLICK
+            actionType: ActionTypes.BOOK_DETAILS_BTN_CLICK,
+            data: bookId
         });
     },
     saveBook: function (book) {

@@ -36,6 +36,16 @@ var BooksApiService = {
 
                 BooksServerActions.receiveBookFormErrors(formErrors);
             });
+    },
+    getBook: function(bookId) {
+        request
+            .get('http://localhost:62636/api/books/' + bookId)
+            .set('Accept', 'application/json')
+            .end(function (err, response) {
+                if(!err) {
+                    BooksServerActions.receiveBook(response.body);
+                }
+            });
     }
 };
 

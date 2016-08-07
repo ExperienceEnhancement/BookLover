@@ -1,9 +1,14 @@
 var React = require('react');
+
+// Actions
 var BooksViewActions = require('../actions/BooksViewActions');
 
+// Components
+var BookForm = require('../components/BookForm.react');
+
 var Book = React.createClass({
-    handleEditBtnClick: function () {
-        BooksViewActions.bookEditBtnClick();
+    handleDetailsBtnClick: function (bookId) {
+        BooksViewActions.bookDetailsBtnClick(bookId);
     },
     render: function () {
         return (
@@ -15,7 +20,7 @@ var Book = React.createClass({
                         Written by {this.props.author}
                     </div>
                     <div className="pull-right">
-                        <span className="btn btn-sm btn-warning" onClick={this.handleEditBtnClick}>Edit</span>
+                        <span className="btn btn-sm btn-primary" onClick={this.handleDetailsBtnClick.bind(this, this.props.id)}>Details</span>
                         <span className="btn btn-sm btn-danger">Delete</span>
                     </div>
                 </div>
