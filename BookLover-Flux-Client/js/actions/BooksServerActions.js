@@ -1,4 +1,6 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher');
+
+// Action types
 var ActionTypes = require('../constants/ActionTypes');
 
 var BooksListServerActions = {
