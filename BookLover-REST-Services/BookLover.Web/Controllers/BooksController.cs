@@ -167,5 +167,23 @@
 
             return this.Ok(bookDto);
         }
+
+        //
+        // DELETE: api/Books/{id:int}
+        [HttpDelete]
+        [Route("{id:int}")]
+        public IHttpActionResult DeleteBook(int id)
+        {
+            var book = this.Data.Books.All().FirstOrDefault(x => x.Id == id);
+            if(book == null)
+            {
+                return this.NotFound();
+            }
+
+            this.Data.Books.Remove(book.Id);
+            this.Data.SaveChanges();
+
+            return this.Ok();
+        }
     }
 }

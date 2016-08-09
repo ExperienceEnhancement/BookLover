@@ -14,7 +14,7 @@ function getBooks() {
 function processSaveUpdateServerResponse(err) {
     var formErrors = {};
 
-    if(!err){
+    if(!err) {
         getBooks();
     } else {
         var errors = err.response.body.modelState;

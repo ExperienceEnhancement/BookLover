@@ -6,7 +6,7 @@ var BooksViewActions = require('../actions/BooksViewActions');
 // Components
 var BookForm = require('../components/BookForm.react');
 
-var Book = React.createClass({
+var BookListItem = React.createClass({
     render: function () {
         return (
             <div className="book panel panel-info">
@@ -34,4 +34,4 @@ var Book = React.createClass({
     }
 });
 
-module.exports = Book;
+module.exports = BookListItem;

@@ -99,7 +99,9 @@ AppDispatcher.register(function (payload) {
             setBookFormErrors(action.data);
             if(_.isEmpty(action.data)) {
                 setFormBook(getFormBookInitialState());
+                _bookFormStatus = BookFormConstants.BOOK_FORM_CREATE_STATUS;
             }
+
             break;
         case ActionTypes.RECEIVE_BOOK:
             setFormBook(action.data);

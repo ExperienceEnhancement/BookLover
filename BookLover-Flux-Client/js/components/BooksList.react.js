@@ -1,13 +1,13 @@
 var React = require('react');
 
 // Components
-var Book = require('./Book.react');
+var BookListItem = require('./BookListItem.react.js');
 
 var BooksList = React.createClass({
     render: function () {
         var booksNodes = this.props.books.map(function(book) {
             return (
-                <Book id={book.id} title={book.title} author={book.author} summary={book.summary}></Book>
+                <BookListItem id={book.id} title={book.title} author={book.author} summary={book.summary}></BookListItem>
             );
         });
 
