@@ -12,10 +12,16 @@ var ActionTypes = require('../constants/ActionTypes');
 var BooksApiService = require('../api-services/BooksApiService');
 
 // State variables
-var _books = [{}];
-var _bookFormErrors = {};
-var _bookFormStatus = BookFormConstants.BOOK_FORM_CREATE_STATUS;
-var _formBook = getFormBookInitialState();
+var _books = [{}]; // BooksList
+var _bookFormErrors = {}; // BookForm
+var _bookFormStatus = BookFormConstants.BOOK_FORM_CREATE_STATUS; // BookForm
+var _formBook = getFormBookInitialState(); // BookForm
+var _bookWithReviews = {
+    title: '',
+    summary: '',
+    author: '',
+    reviews: []
+};
 
 function getFormBookInitialState(){
     return {
@@ -47,7 +53,7 @@ function saveBook(book) {
 }
 
 function deleteBook(bookId) {
-    BooksApiService.delete(bookId);;
+    BooksApiService.delete(bookId);
 }
 
 function getBooksFromServer() {
@@ -64,6 +70,14 @@ function clearBookForm() {
     _formBook = getFormBookInitialState();
 }
 
+function getBookWithReviewsFromServer(bookId) {
+    BooksApiService.getBookWithReviews(bookId);
+}
+
+function setBookWithReviews(book) {
+    _bookWithReviews = book;
+}
+
 var BooksStore = _.extend({}, EventEmitter.prototype, {
     getBooksList: function () {
         return _books;
@@ -76,6 +90,9 @@ var BooksStore = _.extend({}, EventEmitter.prototype, {
     },
     getBookFormStatus: function () {
         return _bookFormStatus;
+    },
+    getBookWithReviews: function () {
+        return _bookWithReviews;
     },
     emitChange: function () {
         this.emit('change');
@@ -103,6 +120,9 @@ AppDispatcher.register(function (payload) {
             }
 
             break;
+        case ActionTypes.RECEIVE_BOOK_WITH_REVIEWS:
+            setBookWithReviews(action.data);
+            break;
         case ActionTypes.RECEIVE_BOOK:
             setFormBook(action.data);
             _bookFormStatus = BookFormConstants.BOOK_FORM_EDIT_STATUS;
@@ -123,6 +143,9 @@ AppDispatcher.register(function (payload) {
             break;
         case ActionTypes.DELETE_BOOK:
             deleteBook(action.data);
+            break;
+        case ActionTypes.GET_BOOK_WITH_REVIEWS:
+            getBookWithReviewsFromServer(action.data);
             break;
         default:
             return true;

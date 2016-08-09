@@ -21,6 +21,12 @@ var BooksListServerActions = {
             actionType: ActionTypes.RECEIVE_BOOK_FORM_ERRORS,
             data: data
         });
+    },
+    receiveBookWithReviews: function(data) {
+        AppDispatcher.handleServerAction({
+            actionType: ActionTypes.RECEIVE_BOOK_WITH_REVIEWS,
+            data: data
+        });
     }
 };
 

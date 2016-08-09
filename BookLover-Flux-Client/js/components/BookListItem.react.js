@@ -17,8 +17,9 @@ var BookListItem = React.createClass({
                         Written by {this.props.author}
                     </div>
                     <div className="pull-right">
+                        <a className="btn btn-sm btn-success" href={"#/books/" + this.props.id} target="blank">Details</a>
                         <span className="btn btn-sm btn-primary"
-                              onClick={this.handleDetailsBtnClick.bind(this, this.props.id)}>Details</span>
+                              onClick={this.handleDetailsBtnClick.bind(this, this.props.id)}>Edit</span>
                         <span className="btn btn-sm btn-danger"
                             onClick={this.handleDeleteBtnClick.bind(this, this.props.id)}>Delete</span>
                     </div>

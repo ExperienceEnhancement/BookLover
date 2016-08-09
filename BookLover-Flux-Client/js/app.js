@@ -10,11 +10,13 @@ var hashHistory = ReactRouter.hashHistory;
 // Components
 var BookLoverApp = require('./components/BookLoverApp.react');
 var Books = require('./components/Books.react');
+var Book = require('./components/Book.react');
 
 Render(
     <Router history={hashHistory}>
         <Route path="/" component={BookLoverApp}>
             <Route path="books" component={Books}/>
+            <Route path="books/:id" component={Book}/>
         </Route>
     </Router>,
     document.getElementById('book-lover-app')

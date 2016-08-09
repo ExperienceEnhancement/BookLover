@@ -76,6 +76,25 @@ var BooksApiService = {
                     BooksServerActions.receiveBook(response.body);
                 }
             });
+    },
+    getBookWithReviews: function (bookId) {
+        request
+            .get('http://localhost:62636/api/books/' + bookId)
+            .set('Accept', 'application/json')
+            .end(function (err, response) {
+                if(!err) {
+                    var book = response.body;
+                    request
+                        .get('http://localhost:62636/api/books/' + bookId + '/reviews')
+                        .set('Accept', 'application/json')
+                        .end(function (err, response) {
+                            if(!err) {
+                                book.reviews = response.body;
+                                BooksServerActions.receiveBookWithReviews(book);
+                            }
+                        });
+                }
+            });
     }
 };
 

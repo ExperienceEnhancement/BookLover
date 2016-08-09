@@ -36,6 +36,12 @@ var BookViewActions = {
             actionType: ActionTypes.DELETE_BOOK,
             data: bookId
         })
+    },
+    getBookWithReviews: function(bookId) {
+        AppDispatcher.handleViewAction({
+            actionType: ActionTypes.GET_BOOK_WITH_REVIEWS,
+            data: bookId
+        })
     }
 };
 
