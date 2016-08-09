@@ -1,10 +1,12 @@
 var React = require('react');
+
+// Actions
 var BooksViewActions = require('../actions/BooksViewActions');
 
+// Components
+var BookForm = require('../components/BookForm.react');
+
 var Book = React.createClass({
-    handleEditBtnClick: function () {
-        BooksViewActions.bookEditBtnClick();
-    },
     render: function () {
         return (
             <div className="book panel panel-info">
@@ -15,12 +17,20 @@ var Book = React.createClass({
                         Written by {this.props.author}
                     </div>
                     <div className="pull-right">
-                        <span className="btn btn-sm btn-warning" onClick={this.handleEditBtnClick}>Edit</span>
-                        <span className="btn btn-sm btn-danger">Delete</span>
+                        <span className="btn btn-sm btn-primary"
+                              onClick={this.handleDetailsBtnClick.bind(this, this.props.id)}>Details</span>
+                        <span className="btn btn-sm btn-danger"
+                            onClick={this.handleDeleteBtnClick.bind(this, this.props.id)}>Delete</span>
                     </div>
                 </div>
             </div>
         );
+    },
+    handleDetailsBtnClick: function (bookId) {
+        BooksViewActions.bookDetails(bookId);
+    },
+    handleDeleteBtnClick: function (bookId) {
+        BooksViewActions.deleteBook(bookId);
     }
 });
 

@@ -4,8 +4,9 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Data.Entity.Migrations;
-    using System.Security.Cryptography.X509Certificates;
+
     using Common.EntityModelsUtils;
+
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
 
