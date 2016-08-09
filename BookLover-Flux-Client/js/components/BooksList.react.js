@@ -1,4 +1,6 @@
 var React = require('react');
+
+// Components
 var Book = require('./Book.react');
 
 var BooksList = React.createClass({

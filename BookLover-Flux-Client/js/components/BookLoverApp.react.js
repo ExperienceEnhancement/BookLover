@@ -1,33 +1,37 @@
 var React = require('react');
 
-// Components
-var BooksList = require('./BooksList.react');
-var BookForm = require('./BookForm.react');
+// Actions
+var BooksViewActions = require('../actions/BooksViewActions');
 
 // Stores
 var BooksStore = require('../stores/BooksStore');
 var AuthorsStore = require('../stores/AuthorsStore');
 
-function getBooksListState() {
+// Components
+var BooksList = require('./BooksList.react');
+var BookForm = require('./BookForm.react');
+
+function getAppState() {
     return {
-        books: BooksStore.getBooksList(),
-        bookFormErrors: BooksStore.getBookFormErrors(),
-        book: BooksStore.getFormBook(),
-        authors: AuthorsStore.getAuthorsList(),
-        status: 'create'
+        booksListState: BooksStore.getBooksList(),
+        bookFormState: {
+            errors: BooksStore.getBookFormErrors(),
+            book: BooksStore.getFormBook(),
+            status: BooksStore.getBookFormStatus(),
+            authors: AuthorsStore.getAuthorsList()
+        }
     }
 }
 
 var BookLoverApp = React.createClass({
     getInitialState: function () {
-        return getBooksListState();
+        return getAppState();
     },
     componentWillMount: function () {
         BooksStore.removeChangeListener(this._onChange);
         AuthorsStore.removeChangeListener(this._onChange);
-        // Api invocations by the stores
-        BooksStore.getBooksFromServer();
-        AuthorsStore.getAuthorsFromServer();
+        BooksViewActions.getBooksList();
+        BooksViewActions.getAuthorsOptions();
     },
     componentDidMount: function () {
         BooksStore.addChangeListener(this._onChange);
@@ -36,13 +40,16 @@ var BookLoverApp = React.createClass({
     render: function () {
         return (
             <div className="book-lover-app">
-                <BooksList books={this.state.books}></BooksList>
-                <BookForm errors={this.state.bookFormErrors} authors={this.state.authors} book={this.state.book} status={this.state.status}></BookForm>
+                <BooksList books={this.state.booksListState}></BooksList>
+                <BookForm
+                    errors={this.state.bookFormState.errors}
+                    authors={this.state.bookFormState.authors}
+                    status={this.state.bookFormState.status}></BookForm>
             </div>
         );
     },
     _onChange: function () {
-        this.setState(getBooksListState());
+        this.setState(getAppState());
     }
 });
 

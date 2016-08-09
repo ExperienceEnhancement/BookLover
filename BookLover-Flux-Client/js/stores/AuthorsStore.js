@@ -5,21 +5,23 @@ var _ = require('underscore');
 // Action types
 var ActionTypes = require('../constants/ActionTypes');
 
-// Services
+// Api services
 var AuthorsApiService = require('../api-services/AuthorsApiService');
 
+// State variables
 var _authors = [{}];
 
-function updateAuthorsList(authors) {
+function getAuthorsFromServer() {
+    AuthorsApiService.get();
+}
+
+function setAuthorsList(authors) {
     _authors = authors;
 }
 
 var AuthorsStore = _.extend({}, EventEmitter.prototype, {
     getAuthorsList: function() {
         return _authors;
-    },
-    getAuthorsFromServer: function() {
-        AuthorsApiService.get();
     },
     emitChange: function() {
         this.emit('change');
@@ -35,8 +37,13 @@ var AuthorsStore = _.extend({}, EventEmitter.prototype, {
 AppDispatcher.register(function (payload) {
     var action = payload.action;
     switch(action.actionType) {
+        // Server actions
         case ActionTypes.RECEIVE_AUTHORS:
-            updateAuthorsList(action.data);
+            setAuthorsList(action.data);
+            break;
+        // View actions
+        case ActionTypes.GET_AUTHORS_OPTIONS:
+            getAuthorsFromServer();
             break;
         default:
             return true;
