@@ -36,6 +36,8 @@
 
         public IRepository<DiaryAccess> DiaryAccesses { get { return this.GetRepository<DiaryAccess>(); } }
 
+        public IRepository<UserSession> UserSessions { get { return this.GetRepository<UserSession>(); } }
+
         public int SaveChanges()
         {
             return this.dbContext.SaveChanges();

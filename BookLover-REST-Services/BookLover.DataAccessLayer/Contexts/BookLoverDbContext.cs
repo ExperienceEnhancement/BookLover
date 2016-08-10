@@ -32,5 +32,7 @@
         public IDbSet<DiaryNote> DiaryNotes { get; set; }
 
         public IDbSet<DiaryAccess> DiaryAccesses { get; set; }
+
+        public IDbSet<UserSession> UserSessions { get; set; }
     }
 }

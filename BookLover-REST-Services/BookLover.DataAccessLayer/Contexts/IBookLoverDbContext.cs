@@ -20,6 +20,8 @@
 
         IDbSet<DiaryAccess> DiaryAccesses { get; }
 
+        IDbSet<UserSession> UserSessions { get; }
+
         int SaveChanges();
     }  
 }

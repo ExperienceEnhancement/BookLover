@@ -17,6 +17,7 @@ namespace BookLover.Web
     using System.Web.Cors;
     using DataAccessLayer.Contexts;
     using DataAccessLayer.Data;
+    using UserSessionUtils;
 
     public partial class Startup
     {
@@ -50,7 +51,7 @@ namespace BookLover.Web
         {
             kernel.Bind<IBookLoverData>().To<BookLoverBookLoverData>();
             kernel.Bind<IBookLoverDbContext>().To<BookLoverDbContext>();
-
+            kernel.Bind<IUserSessionManager>().To<UserSessionManager>();
         }
     }
 }

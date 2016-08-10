@@ -2,12 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Net;
     using System.Net.Http;
     using System.Security.Claims;
     using System.Security.Cryptography;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Http;
+    using System.Web.Script.Serialization;
+
+    using DataAccessLayer.Data;
 
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
@@ -15,22 +19,33 @@
     using Microsoft.Owin.Security;
     using Microsoft.Owin.Security.Cookies;
     using Microsoft.Owin.Security.OAuth;
+    using Microsoft.Owin.Testing;
 
     using Models;
     using Providers;
     using Results;
     using EntityModels;
     using Models.BindingModels;
+    using UserSessionUtils;
 
     [Authorize]
     [RoutePrefix("api/Account")]
-    public class AccountController : ApiController
+    public class AccountController : BaseApiController
     {
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;
+        private IUserSessionManager UserSessionManager { get; }
+
+        public AccountController(IBookLoverData data,
+            IUserSessionManager userSessionManager): base(data)
+        {
+            this.UserSessionManager = userSessionManager;
+        }
 
         public AccountController(ApplicationUserManager userManager,
-            ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
+            ISecureDataFormat<AuthenticationTicket> accessTokenFormat,
+            IBookLoverData data,
+            IUserSessionManager userSessionManager): this(data, userSessionManager)
         {
             UserManager = userManager;
             AccessTokenFormat = accessTokenFormat;
@@ -70,7 +85,10 @@
         public IHttpActionResult Logout()
         {
             Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
-            return Ok();
+
+            this.UserSessionManager.InvalidateUserSession();
+
+            return Ok(new { message = "Logout successful" });
         }
 
         // GET api/Account/ManageInfo?returnUrl=%2F&generateState=true
@@ -327,7 +345,7 @@
                 return BadRequest(ModelState);
             }
 
-            var user = new User() { UserName = model.Email, Email = model.Email };
+            var user = new User() { UserName = model.Username, Email = model.Email };
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 
@@ -336,7 +354,50 @@
                 return GetErrorResult(result);
             }
 
-            return Ok();
+            var loginResult = await this.Login(new LoginUserBindingModel()
+            {
+                Username = model.Username,
+                Password = model.Password
+            });
+
+            return loginResult;
+        }
+
+        // POST api/Account/Login
+        [AllowAnonymous]
+        [Route("Login")]
+        public async Task<IHttpActionResult> Login(LoginUserBindingModel model)
+        {
+            if (model == null)
+            {
+                return this.BadRequest("Invalid user data");
+            }
+
+            var testServer = TestServer.Create<Startup>();
+            var requestParams = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("grant_type", "password"),
+                new KeyValuePair<string, string>("username", model.Username),
+                new KeyValuePair<string, string>("password", model.Password)
+            };
+
+            var requestParamsFormUrlEncoded = new FormUrlEncodedContent(requestParams);
+            var tokenServiceResponse = await testServer.HttpClient.PostAsync(
+                Startup.TokenEndpointPath, requestParamsFormUrlEncoded);
+
+            if (tokenServiceResponse.StatusCode == HttpStatusCode.OK)
+            {
+                var responseString = await tokenServiceResponse.Content.ReadAsStringAsync();
+                var jsSerializer = new JavaScriptSerializer();
+                var responseData =
+                    jsSerializer.Deserialize<Dictionary<string, string>>(responseString);
+                var authToken = responseData["access_token"];
+                var username = responseData["userName"];
+                this.UserSessionManager.CreateUserSession(username, authToken);
+                this.UserSessionManager.DeleteExpiredUserSessions();
+            }
+
+            return this.ResponseMessage(tokenServiceResponse);
         }
 
         // POST api/Account/RegisterExternal

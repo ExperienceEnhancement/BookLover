@@ -19,6 +19,8 @@
 
         IRepository<DiaryAccess> DiaryAccesses { get; }
 
+        IRepository<UserSession> UserSessions { get; }
+
         int SaveChanges();
     }
 }

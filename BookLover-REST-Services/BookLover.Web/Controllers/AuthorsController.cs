@@ -4,14 +4,17 @@ namespace BookLover.Web.Controllers
 {
     using System.Data.Entity;
     using System.Linq;
+    using System.Web;
     using System.Web.Http;
 
     using AutoMapper.QueryableExtensions;
 
     using DataAccessLayer.Data;
     using EntityModels;
+    using Microsoft.AspNet.Identity;
     using Models.BindingModels.AuthorsBindingModels;
     using Models.DataTransferObjects;
+    using UserSessionUtils;
 
     [RoutePrefix("api/Authors")]
     [EnableCors(origins: "*", headers: "*", methods: "*")]
@@ -25,6 +28,7 @@ namespace BookLover.Web.Controllers
         // GET: api/Authors
         [HttpGet]
         [Route("")]
+        [SessionAuthorise]
         public IHttpActionResult GetAuthors()
         {
             var authors = this.Data.Authors.All()

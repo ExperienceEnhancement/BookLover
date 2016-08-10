@@ -5,6 +5,7 @@ var Render = require('react-dom').render;
 var ReactRouter = require('react-router');
 var Router = ReactRouter.Router;
 var Route = ReactRouter.Route;
+var IndexRoute = ReactRouter.IndexRoute;
 var hashHistory = ReactRouter.hashHistory;
 
 // Components
@@ -15,6 +16,7 @@ var Book = require('./components/Book.react');
 Render(
     <Router history={hashHistory}>
         <Route path="/" component={BookLoverApp}>
+            <IndexRoute component={Books}/>
             <Route path="books" component={Books}/>
             <Route path="books/:id" component={Book}/>
         </Route>
