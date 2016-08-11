@@ -5,10 +5,11 @@
     using System.Net.Http;
     using System.Web.Http;
     using System.Web.Http.Controllers;
+
     using DataAccessLayer.Data;
     using Ninject;
 
-    public class SessionAuthoriseAttribute: AuthorizeAttribute
+    public class SessionAuthorizeAttribute: AuthorizeAttribute
     {
         protected IBookLoverData Data { get; private set; }
 

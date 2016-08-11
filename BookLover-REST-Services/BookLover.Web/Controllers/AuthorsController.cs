@@ -1,20 +1,16 @@
-﻿using System.Web.Http.Cors;
-
-namespace BookLover.Web.Controllers
+﻿namespace BookLover.Web.Controllers
 {
     using System.Data.Entity;
     using System.Linq;
-    using System.Web;
     using System.Web.Http;
+    using System.Web.Http.Cors;
 
     using AutoMapper.QueryableExtensions;
 
     using DataAccessLayer.Data;
     using EntityModels;
-    using Microsoft.AspNet.Identity;
     using Models.BindingModels.AuthorsBindingModels;
     using Models.DataTransferObjects;
-    using UserSessionUtils;
 
     [RoutePrefix("api/Authors")]
     [EnableCors(origins: "*", headers: "*", methods: "*")]

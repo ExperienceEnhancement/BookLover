@@ -16,6 +16,29 @@
 
         public string Author { get; set; }
 
+        public override bool Equals(object obj)
+        {
+            var comparedObject = obj as BookDto;
+
+            if (comparedObject == null)
+            {
+                return false;
+            }
+
+            var areEqual = this.Id.Equals(comparedObject.Id) &&
+                this.Title.Equals(comparedObject.Title) &&
+                this.Summary.Equals(comparedObject.Summary) &&
+                this.AuthorId.Equals(comparedObject.AuthorId) &&
+                this.Author.Equals(comparedObject.Author);
+
+            return areEqual;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Id.GetHashCode();
+        }
+
         public void CreateMappings(IConfiguration configuration)
         {
             configuration.CreateMap<Book, BookDto>()
