@@ -19,7 +19,6 @@
     using Microsoft.Owin.Security;
     using Microsoft.Owin.Security.Cookies;
     using Microsoft.Owin.Security.OAuth;
-    using Microsoft.Owin.Testing;
 
     using Models;
     using Providers;
@@ -65,6 +64,84 @@
 
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
+        // POST api/Account/Register
+        [AllowAnonymous]
+        [Route("Register")]
+        public async Task<IHttpActionResult> Register(RegisterBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = new User() { UserName = model.Username, Email = model.Email };
+
+            IdentityResult result = await UserManager.CreateAsync(user, model.Password);
+
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
+
+            var loginResult = await this.Login(new LoginUserBindingModel()
+            {
+                Username = model.Username,
+                Password = model.Password
+            });
+
+            return loginResult;
+        }
+
+        // POST api/Account/Login
+        [AllowAnonymous]
+        [Route("Login")]
+        public async Task<IHttpActionResult> Login(LoginUserBindingModel model)
+        {
+            if (model == null)
+            {
+                return this.BadRequest("Invalid user data");
+            }
+
+            var httpClient = new HttpClient();
+            var request = HttpContext.Current.Request;
+            var tokenServiceUrl = request.Url.GetLeftPart(UriPartial.Authority) + Startup.TokenEndpointPath;
+            var requestParams = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("grant_type", "password"),
+                new KeyValuePair<string, string>("username", model.Username),
+                new KeyValuePair<string, string>("password", model.Password)
+            };
+
+            var requestParamsFormUrlEncoded = new FormUrlEncodedContent(requestParams);
+            var tokenServiceResponse = await httpClient.PostAsync(
+                tokenServiceUrl, requestParamsFormUrlEncoded);
+
+            if (tokenServiceResponse.StatusCode == HttpStatusCode.OK)
+            {
+                var responseString = await tokenServiceResponse.Content.ReadAsStringAsync();
+                var jsSerializer = new JavaScriptSerializer();
+                var responseData =
+                    jsSerializer.Deserialize<Dictionary<string, string>>(responseString);
+                var authToken = responseData["access_token"];
+                var username = responseData["userName"];
+                this.UserSessionManager.CreateUserSession(username, authToken);
+                this.UserSessionManager.DeleteExpiredUserSessions();
+            }
+
+            return this.ResponseMessage(tokenServiceResponse);
+        }
+
+        // POST api/Account/Logout
+        [Route("Logout")]
+        public IHttpActionResult Logout()
+        {
+            Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
+
+            this.UserSessionManager.InvalidateUserSession();
+
+            return Ok(new { message = "Logout successful" });
+        }
+
         // GET api/Account/UserInfo
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
         [Route("UserInfo")]
@@ -78,17 +155,6 @@
                 HasRegistered = externalLogin == null,
                 LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null
             };
-        }
-
-        // POST api/Account/Logout
-        [Route("Logout")]
-        public IHttpActionResult Logout()
-        {
-            Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
-
-            this.UserSessionManager.InvalidateUserSession();
-
-            return Ok(new { message = "Logout successful" });
         }
 
         // GET api/Account/ManageInfo?returnUrl=%2F&generateState=true
@@ -333,71 +399,6 @@
             }
 
             return logins;
-        }
-
-        // POST api/Account/Register
-        [AllowAnonymous]
-        [Route("Register")]
-        public async Task<IHttpActionResult> Register(RegisterBindingModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var user = new User() { UserName = model.Username, Email = model.Email };
-
-            IdentityResult result = await UserManager.CreateAsync(user, model.Password);
-
-            if (!result.Succeeded)
-            {
-                return GetErrorResult(result);
-            }
-
-            var loginResult = await this.Login(new LoginUserBindingModel()
-            {
-                Username = model.Username,
-                Password = model.Password
-            });
-
-            return loginResult;
-        }
-
-        // POST api/Account/Login
-        [AllowAnonymous]
-        [Route("Login")]
-        public async Task<IHttpActionResult> Login(LoginUserBindingModel model)
-        {
-            if (model == null)
-            {
-                return this.BadRequest("Invalid user data");
-            }
-
-            var testServer = TestServer.Create<Startup>();
-            var requestParams = new List<KeyValuePair<string, string>>
-            {
-                new KeyValuePair<string, string>("grant_type", "password"),
-                new KeyValuePair<string, string>("username", model.Username),
-                new KeyValuePair<string, string>("password", model.Password)
-            };
-
-            var requestParamsFormUrlEncoded = new FormUrlEncodedContent(requestParams);
-            var tokenServiceResponse = await testServer.HttpClient.PostAsync(
-                Startup.TokenEndpointPath, requestParamsFormUrlEncoded);
-
-            if (tokenServiceResponse.StatusCode == HttpStatusCode.OK)
-            {
-                var responseString = await tokenServiceResponse.Content.ReadAsStringAsync();
-                var jsSerializer = new JavaScriptSerializer();
-                var responseData =
-                    jsSerializer.Deserialize<Dictionary<string, string>>(responseString);
-                var authToken = responseData["access_token"];
-                var username = responseData["userName"];
-                this.UserSessionManager.CreateUserSession(username, authToken);
-                this.UserSessionManager.DeleteExpiredUserSessions();
-            }
-
-            return this.ResponseMessage(tokenServiceResponse);
         }
 
         // POST api/Account/RegisterExternal

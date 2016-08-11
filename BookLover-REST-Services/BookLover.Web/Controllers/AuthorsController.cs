@@ -28,7 +28,6 @@ namespace BookLover.Web.Controllers
         // GET: api/Authors
         [HttpGet]
         [Route("")]
-        [SessionAuthorise]
         public IHttpActionResult GetAuthors()
         {
             var authors = this.Data.Authors.All()
