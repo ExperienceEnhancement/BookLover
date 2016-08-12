@@ -9,8 +9,12 @@
 
     public class BookLoverDbContext : IdentityDbContext<User>, IBookLoverDbContext
     {
-        public BookLoverDbContext()
-            : base("BookLoverDbConnection", throwIfV1Schema: false)
+        public BookLoverDbContext(): this("BookLoverDbConnection")
+        {
+        }
+
+        public BookLoverDbContext(string connectionString)
+            : base(connectionString, throwIfV1Schema: false)
         {
             Database.SetInitializer(
                 new MigrateDatabaseToLatestVersion<BookLoverDbContext, BookLoverDbMigrationConfiguration>());

@@ -18,6 +18,8 @@ namespace BookLover.Web
     using DataAccessLayer.Contexts;
     using DataAccessLayer.Data;
     using UserSessionUtils;
+    using Common.Mappings;
+    using System.Collections.Generic;
 
     public partial class Startup
     {
@@ -35,6 +37,9 @@ namespace BookLover.Web
             webApiConfig.Formatters
               .JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             app.UseNinjectWebApi(webApiConfig);
+
+            var autoMapperConfig = new AutoMapperConfig(new List<Assembly> { Assembly.GetExecutingAssembly() });
+            autoMapperConfig.Execute();
         }
 
         private IKernel CreateKernel()
