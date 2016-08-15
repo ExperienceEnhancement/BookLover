@@ -20,6 +20,10 @@ namespace BookLover.Web
     using UserSessionUtils;
     using Common.Mappings;
     using System.Collections.Generic;
+    using System.Web.Http.OData.Builder;
+    using System.Web.Http.OData.Extensions;
+    using EntityModels;
+    using Models.DataTransferObjects;
 
     public partial class Startup
     {
@@ -29,13 +33,18 @@ namespace BookLover.Web
             app.UseNinjectMiddleware(this.CreateKernel);
             var webApiConfig = new HttpConfiguration();
             webApiConfig.MapHttpAttributeRoutes();
+
+            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            builder.EntitySet<BookDto>("Odata");
+            webApiConfig.Routes.MapODataServiceRoute("odata", "odata", builder.GetEdmModel());
+
             webApiConfig.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional });
             webApiConfig.EnableCors();
-            webApiConfig.Formatters
-              .JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            //webApiConfig.Formatters
+            //  .JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             app.UseNinjectWebApi(webApiConfig);
 
             var autoMapperConfig = new AutoMapperConfig(new List<Assembly> { Assembly.GetExecutingAssembly() });
